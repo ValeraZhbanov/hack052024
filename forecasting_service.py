@@ -1,5 +1,7 @@
 
+import waitress
 import flask
+
 import json
 import keras
 import pandas as pd
@@ -41,5 +43,5 @@ def fit(date):
 
 
 if __name__ == '__main__':
-    app.run(**config.forecasting_service)
+    waitress.serve(app, **config.forecasting_service)
 

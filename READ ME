@@ -10,6 +10,10 @@
 Зависимости и версии
 Python 3.11
 
+pip install waitress
+pip install flask
+
+
 pip install --upgrade pip
 pip install scipy
 pip install numpy

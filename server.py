@@ -1,5 +1,6 @@
 # -*- coding: cp1251 -*-
 
+import waitress
 import flask
 import json
 from psycopg2 import connect
@@ -26,7 +27,7 @@ def test():
         pass
 
     try:
-        nn = requests.get('http://{0}:{1}/fit/{2}'.format(config.forecasting_service['host'], config.forecasting_service['port'], 123)).json()
+        nn = requests.get('{0}://{1}:{2}/fit/{3}'.format(config.forecasting_service['url_scheme'], config.forecasting_service['host'], config.forecasting_service['port'], 123)).json()
     except Exception as e:
         nn = str(e)
         pass
@@ -40,5 +41,5 @@ def test():
 
 
 if __name__ == '__main__':
-    app.run(**config.server)
+    waitress.serve(app, **config.server)
 

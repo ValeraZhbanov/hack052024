@@ -11,10 +11,14 @@ doc_schedule = {
 forecasting_service = {
     'host': "127.0.0.1",
     'port': 5024, 
+    'url_scheme': 'http',
+    'threads': 4,
 }
 
 server = {
     'host': "127.0.0.1",
     'port': 50032, 
+    'url_scheme': 'http',
+    'threads': 32,
 }
 
