@@ -1,0 +1,30 @@
+
+Запуск приложения
+1 Установите все зависимости и убедитесь что не возникло конфликтов
+2 Запустить forecasting_service.py
+3 Запустить server.py 
+
+
+
+
+Зависимости и версии
+Python 3.11
+
+pip install --upgrade pip
+pip install scipy
+pip install numpy
+pip install pandas
+pip install matplotlib
+
+pip install gensim
+pip install --upgrade tensorflow[and-cuda]
+pip install keras
+pip install transformers
+
+pip install jarowinkler
+pip install psycopg2
+
+
+
+
+
