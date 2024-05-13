@@ -7,7 +7,7 @@ import requests
 from datetime import date
 
 import config
-import dbstore
+from sql import dbstore
 
 
 from controllers import dictionary
