@@ -10,24 +10,25 @@
 Зависимости и версии
 Python 3.11
 
+pip install --upgrade pip
+
 pip install waitress
 pip install flask
+pip install Flask-APScheduler
+pip install psycopg2
 
-
-pip install --upgrade pip
+pip install joblib
+pip install scikit-learn
 pip install scipy
 pip install numpy
 pip install pandas
 pip install matplotlib
 
-pip install gensim
-pip install --upgrade tensorflow[and-cuda]
+pip install --upgrade tensorflow
 pip install keras
-pip install transformers
 
-pip install jarowinkler
-pip install psycopg2
-
+pip install secure-smtplib
+pip install python-telegram-bot
 
 
 

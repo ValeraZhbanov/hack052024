@@ -22,3 +22,7 @@ server = {
     'threads': 32,
 }
 
+telegram = {
+    'token': "7301130137:AAHvW4jglMkMMNGLO7jPPpvPSajuGScn25w"
+}
+    

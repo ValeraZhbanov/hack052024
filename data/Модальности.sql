@@ -1,119 +1,43 @@
 
 CREATE TABLE med.Модальности (
 	Код INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Аббр VARCHAR(10) UNIQUE,
-	НазваниеЕн VARCHAR(300) UNIQUE,
-	НазваниеРу VARCHAR(300) UNIQUE,
-    Активно boolean DEFAULT (true)
+	Название VARCHAR(300)
 );
 
-INSERT INTO med.Модальности (Аббр, НазваниеЕн, НазваниеРу, Активно)
-VALUES
-('AR', 'Autorefraction', NULL, true),
-('ARCHIVE', 'Archive', NULL, true),
-('AS', 'Angioscopy', NULL, false),
-('ASMT', 'Content Assessment Results', NULL, true),
-('AU', 'Audio', 'Аудиозаписи', true),
-('BDUS', 'Ultrasound Bone Densitometry', NULL, true),
-('BI', 'Biomagnetic imaging', 'Биомагнитные изображения', true),
-('BMD', 'Bone Mineral Densitometry', NULL, true),
-('CAD', 'Computer Assisted Detection/Diagnosis', NULL, true),
-('CAPTURE', 'Image Capture', NULL, true),
-('CD', 'Color flow Doppler', 'Цветовое доплеровское картирование', false),
-('CF', 'Cinefluorography', NULL, false),
-('COMP', 'Computation Server', NULL, true),
-('CP', 'Culposcopy', NULL, false),
-('CR', 'Computed Radiography', 'Компьютерная рентгенография', true),
-('CS', 'Cystoscopy', NULL, false),
-('CT', 'Computed Tomography', 'Компьютерная томография', true),
-('CTPROTOCOL', 'CT Protocol (Performed)', NULL, true),
-('DD', 'Duplex Doppler', 'Двойное допплеровское картирование', false),
-('DF', 'Digital fluoroscopy', NULL, false),
-('DG', 'Diaphanography', 'Диафанография', true),
-('DM', 'Digital microscopy', NULL, false),
-('DOC', 'Document', NULL, true),
-('DOCD', 'Document Digitizer Equipment', NULL, true),
-('DS', 'Digital Subtraction Angiography', NULL, false),
-('DSS', 'Department System Scheduler', NULL, true),
-('DX', 'Digital Radiography', 'Цифровая рентгенография', true),
-('EC', 'Echocardiography', NULL, false),
-('ECG', 'Electrocardiography', 'Электрокардиография (ЭКГ)', true),
-('EPS', 'Cardiac Electrophysiology', 'Электрофизиология сердца', true),
-('ES', 'Endoscopy', 'Эндоскопия', true),
-('FA', 'Fluorescein angiography', NULL, false),
-('FID', 'Fiducials', NULL, true),
-('FILMD', 'Film Digitizer', NULL, true),
-('FS', 'Fundoscopy', NULL, false),
-('GM', 'General Microscopy', 'Микроскопия общего назначения', true),
-('HC', 'Hard Copy', 'Твердая копия', true),
-('HD', 'Hemodynamic Waveform', 'Кривые кровотока', true),
-('IO', 'Intra-oral Radiography', 'Рентгенография ротовой полости', true),
-('IOL', 'Intraocular Lens Data', NULL, true),
-('IVOCT', 'Intravascular Optical Coherence Tomography', NULL, true),
-('IVUS', 'Intravascular Ultrasound', 'Внутрисосудистый ультразвук', true),
-('KER', 'Keratometry', NULL, true),
-('KO', 'Key Object Selection', NULL, true),
-('LEN', 'Lensometry', NULL, true),
-('LOG', 'Procedure Logging', NULL, true),
-('LP', 'Laparoscopy', NULL, false),
-('LS', 'Laser surface scan', 'Поверхностное лазерное сканирование', true),
-('M3D', 'Model for 3D Manufacturing', NULL, true),
-('MA', 'Magnetic resonance angiography', NULL, false),
-('MCD', 'Media Creation Device', NULL, true),
-('MEDIM', 'Portable Media Importer Equipment', NULL, true),
-('MG', 'Mammography', 'Маммография', true),
-('MR', 'Magnetic Resonance', 'Магнитно-резонансная томография', true),
-('MS', 'Magnetic resonance spectroscopy', NULL, false),
-('NM', 'Nuclear Medicine', 'Ядерная медицина', true),
-('OAM', 'Ophthalmic Axial Measurements', NULL, true),
-('OCT', 'Optical Coherence Tomography', NULL, true),
-('OP', 'Ophthalmic photography', 'Офтальмологическая фотография', true),
-('OPM', 'Ophthalmic Mapping', NULL, true),
-('OPR', 'Ophthalmic Refraction', NULL, false),
-('OPT', 'Ophthalmic Tomography', NULL, true),
-('OPTBSV', 'Ophthalmic Tomography B-scan Volume Analysis', NULL, true),
-('OPTENF', 'Ophthalmic En face', NULL, true),
-('OPV', 'Ophthalmic Visual Field', NULL, true),
-('OSS', 'Optical Surface Scanner', NULL, true),
-('OT', 'Other Modality', 'Другое', false),
-('PLAN', 'Plan', NULL, true),
-('PR', 'Presentation State', NULL, true),
-('PRINT', 'Hard Copy Print Server', NULL, true),
-('PT', 'Positron emission tomography', 'Позитронно-эмиссионная томография', true),
-('PX', 'Panoramic X-Ray', 'Панорамная рентгенография', true),
-('REG', 'Registration', NULL, true),
-('RESP', 'Respiratory Waveform', NULL, true),
-('RF', 'Radiofluoroscopy', 'Рентгенофлюороскопия', true),
-('RG', 'Radiographic imaging', 'Рентгенография', true),
-('RT', 'Radiation Therapy Device', NULL, true),
-('RTDOSE', 'Radiotherapy Dose', NULL, true),
-('RTIMAGE', 'Radiotherapy Image', NULL, true),
-('RTINTENT', 'Radiotherapy Intent', NULL, true),
-('RTPLAN', 'Radiotherapy Plan', NULL, true),
-('RTRAD', 'RT Radiation', NULL, true),
-('RTRECORD', 'Radiotherapy Treatment Record', NULL, true),
-('RTSEGANN', 'Radiotherapy Segment Annotation', NULL, true),
-('RTSTRUCT', 'Radiotherapy Structure Set', NULL, true),
-('RWV', 'Real World Value Mapping', NULL, true),
-('SC', 'Secondary Capture', 'Вторичный захват', true),
-('SEG', 'Segmentation', NULL, true),
-('SM', 'Slide Microscopy', 'Слайд-микроскопия', true),
-('SMR', 'Stereometric Relationship', 'Стереометрическое взаимодействие', true),
-('SR', 'Structured Report Document', 'Структурированный документ', true),
-('SRF', 'Subjective Refraction', NULL, true),
-('ST', 'Single-photon emission computed tomography (SPECT)', 'Однофотонная эмиссионная компьютерная томография (ОФЭКТ)', false),
-('STAIN', 'Automated Slide Stainer', NULL, true),
-('TG', 'Thermography', 'Термография', true),
-('US', 'Ultrasound', 'Ультразвуковое исследование (УЗИ)', true),
-('VA', 'Visual Acuity', NULL, true),
-('VF', 'Videofluorography', NULL, false),
-('VIDD', 'Video Tape Digitizer Equipment', NULL, true),
-('WSD', 'Workstation', NULL, true),
-('XA', 'X-Ray Angiography', 'Рентгеновская ангиография', true),
-('XC', 'External-camera Photography', 'Наружная фотография', true)
+INSERT INTO med.Модальности (Название)
+VALUES 
+('Денситометрия'),
+('КТ'),
+('ММГ'),
+('МРТ'),
+('РГ'),
+('ФЛГ')
 
+CREATE TABLE med.ТипыИсследований (
+	Код INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	КодМодальности INT NOT NULL REFERENCES med.Модальности (Код),
+	Название VARCHAR(300),
+	Аббр VARCHAR(10) NOT NULL UNIQUE,
+	НормаВремени TIME NOT NULL DEFAULT ('00:10'::time)
+);
 
+INSERT INTO med.ТипыИсследований (КодМодальности, Название, Аббр)
+VALUES 
+(1, 'Денситометрия', 'Денс'),
+(2, 'КТ', 'КТ'),
+(2, 'КТ с КУ 1 зона', 'КТ1'),
+(2, 'КТ с КУ 2 и более зон', 'КТ2'),
+(3, 'ММГ', 'ММГ'),
+(4, 'МРТ', 'МРТ'),
+(4, 'МРТ с КУ 1 зона', 'МРТ1'),
+(4, 'МРТ с КУ 2 и более зон', 'МРТ2'),
+(5, 'РГ', 'РГ'),
+(6, 'ФЛГ', 'ФЛГ')
 
-
-
-
+CREATE OR REPLACE VIEW med.ТипыИсследованийПодробно
+AS
+SELECT
+	ТипыИсследований.*,
+	row_to_json(Модальности) Модальность
+FROM med.ТипыИсследований
+INNER JOIN med.Модальности ON Модальности.Код = ТипыИсследований.КодМодальности

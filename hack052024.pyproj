@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>4666088a-ba74-46d6-b4de-9aac98c728e9</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>server.py</StartupFile>
+    <StartupFile>forecasting_service.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,23 +23,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="config.py" />
-    <Compile Include="controllers\schedule.py" />
-    <Compile Include="controllers\dictionary.py" />
+    <Compile Include="schedule.py" />
     <Compile Include="forecasting_service.py" />
     <Compile Include="server.py" />
-    <Compile Include="sql\dbstore.py" />
-    <Compile Include="models.py" />
+    <Compile Include="dbstore.py" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="controllers\" />
     <Folder Include="data\" />
-    <Folder Include="sql\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data\ВидыМетодик.sql" />
-    <Content Include="data\КатегорииМетодик.sql" />
+    <Content Include="data\Уведомления.sql" />
+    <Content Include="data\test.sql" />
+    <Content Include="data\Исследования.sql" />
+    <Content Include="data\ГрафикиРаботы.sql" />
+    <Content Include="data\Доктора_.sql" />
     <Content Include="data\СтатистикаОбращений.sql" />
-    <Content Include="data\ТипыОборудования.sql" />
     <Content Include="data\Модальности.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
