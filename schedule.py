@@ -10,8 +10,6 @@ import asyncio
 
 import smtplib
 
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
-from telegram.ext import Application
 
 import config
 
@@ -19,7 +17,7 @@ from dbstore import DbStore
 
 
 scheduler = flask_apscheduler.APScheduler()
-application = Application.builder().token(config.telegram['token']).build()
+bot_token = config.telegram['token']
 
 
 def send_mail():
@@ -51,28 +49,43 @@ def send_telegram():
         LIMIT 30;
     """)
 
+
     for event in events:
 
-        message = event['Текст']
-        url = event['Ссылка']
-        telegram_id = event['Телеграм']
+        random_id = event['Код']
+        chat_id = event['Телеграм']
+        text = event['Текст']
+        webAppUrl = event['Ссылка']
+        reply_markup = None
         sended = False
 
-        keyboard = None
-        if url is not None:
-            keyboard = InlineKeyboardMarkup([[
-                InlineKeyboardButton('Перейти на сайт', web_app=WebAppInfo(url=url))
-            ]])
+        data = {
+            'chat_id': chat_id, 
+            'text': text, 
+            'parse_mode': 'HTML',
+            'random_id': random_id,
+        }
+
+        if webAppUrl is not None:
+            data['reply_markup']={"inline_keyboard":[[{'text':'Перейти на сайт', 'web_app':{'url':webAppUrl}}]],"one_time_keyboard":True}
+
+        url ="https://api.telegram.org/bot" + bot_token + "/sendMessage"
 
         try:
-            asyncio.run(application.bot.send_message(telegram_id, message, reply_markup=keyboard))
-            sended = True
-        except:
+            res = requests.get(url, data=data)
+            ans = res.json()
+            sended = ans['ok']
+            print(ans)
+
+            if ans['error_code'] == 429:
+                break
+        except Exception as e:
+            print(e)
             pass
 
         DbStore.execute_proc('event.ФиксироватьОтправку', [event['Код'], event['КодПользователя'], 2, sended])
 
 
-scheduler.add_job(id='Уведомление почты', func=send_mail, trigger="interval", seconds=3, max_instances=1)
-scheduler.add_job(id='Уведомление телеграм', func=send_telegram, trigger="interval", seconds=3, max_instances=1)
+scheduler.add_job(id='Уведомление почты', func=send_mail, trigger="interval", seconds=10, max_instances=1)
+scheduler.add_job(id='Уведомление телеграм', func=send_telegram, trigger="interval", seconds=10, max_instances=1)
 scheduler.start()
