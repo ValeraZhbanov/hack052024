@@ -73,6 +73,6 @@ def send_telegram():
         DbStore.execute_proc('event.ФиксироватьОтправку', [event['Код'], event['КодПользователя'], 2, sended])
 
 
-scheduler.add_job(id='Уведомление почты', func=send_mail, trigger="interval", seconds=3)
-scheduler.add_job(id='Уведомление телеграм', func=send_telegram, trigger="interval", seconds=3)
+scheduler.add_job(id='Уведомление почты', func=send_mail, trigger="interval", seconds=3, max_instances=1)
+scheduler.add_job(id='Уведомление телеграм', func=send_telegram, trigger="interval", seconds=3, max_instances=1)
 scheduler.start()
