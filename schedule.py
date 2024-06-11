@@ -30,6 +30,7 @@ def send_mail():
           AND Почта IS NOT NULL
           AND ЧислоПопытокПочты < 3
           AND NOT ОтправленноНаПочту
+          AND CURRENT_TIMESTAMP + '-01:00'::interval < ДатаСоздания
         LIMIT 30;
     """)
 
@@ -46,12 +47,12 @@ def send_telegram():
           AND Телеграм IS NOT NULL
           AND ЧислоПопытокТелеграм < 3
           AND NOT ОтправленноТелеграм
+          AND CURRENT_TIMESTAMP + '-01:00'::interval < ДатаСоздания
         LIMIT 30;
     """)
 
     for event in events:
 
-        random_id = event['Код']
         message = event['Текст']
         url = event['Ссылка']
         telegram_id = event['Телеграм']

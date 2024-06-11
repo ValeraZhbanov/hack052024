@@ -1,24 +1,19 @@
 
 CREATE TABLE med.Модальности (
 	Код INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	Название VARCHAR(300)
+	Название VARCHAR(300),
+	Аббр VARCHAR(10) NOT NULL
 );
-
-INSERT INTO med.Модальности (Название)
-VALUES 
-('Денситометрия'),
-('КТ'),
-('ММГ'),
-('МРТ'),
-('РГ'),
-('ФЛГ')
 
 CREATE TABLE med.ТипыИсследований (
 	Код INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	КодМодальности INT NOT NULL REFERENCES med.Модальности (Код),
 	Название VARCHAR(300),
-	Аббр VARCHAR(10) NOT NULL UNIQUE,
-	НормаВремени TIME NOT NULL DEFAULT ('00:10'::time)
+	КоличествоУЕВОдномОписании DECIMAL (6, 2) NOT NULL DEFAULT (1.0),
+	МинКолИсследованийЗаСмену DECIMAL (6, 2) NOT NULL DEFAULT (1),
+	МаксКолИсследованийЗаСмену DECIMAL (6, 2) NOT NULL DEFAULT (10),
+	МинКолУЕЗаСмену INT NOT NULL DEFAULT (1),
+	МаксКолУЕЗаСмену INT NOT NULL DEFAULT (10),
 );
 
 INSERT INTO med.ТипыИсследований (КодМодальности, Название, Аббр)

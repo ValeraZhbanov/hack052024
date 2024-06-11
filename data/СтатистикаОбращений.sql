@@ -31,10 +31,7 @@ AS
 SELECT 
 	Грпировка.Дата, 
 	Грпировка.КодТипа, 
-	json_object(
-		array_agg(ТипыИсследований.Аббр), 
-		array_agg(COALESCE (СтатистикаОбращений.Значение, 0)::varchar)
-	) Значения
+	array_agg(COALESCE (СтатистикаОбращений.Значение, 0)::varchar) Значения
 FROM (
 	SELECT Дата, КодТипа
 	FROM nn.СтатистикаОбращений
@@ -55,22 +52,19 @@ CREATE OR REPLACE VIEW nn.СтатистикаОбращенийТаблицей
 AS
 SELECT 
 	ТекущаяДата.Дата, 
-	json_object(
-		array_agg(ТипыИсследований.Аббр), 
-		array_agg(COALESCE (
-			СтатистикаОбращений1.Значение,
-			СтатистикаОбращений2.Значение, 
-			(СтатистикаОбращений3.Значение / 7)::int,
-			(СтатистикаОбращений4.Значение / 7)::int,
-			0
-		)::varchar)
-	) Значения
+	json_agg(json_build_object('Тип', row_to_json(ТипыИсследований), 'Значение', COALESCE (
+		СтатистикаОбращений1.Значение,
+		СтатистикаОбращений2.Значение, 
+		(СтатистикаОбращений3.Значение / 7)::int,
+		(СтатистикаОбращений4.Значение / 7)::int,
+		0
+	)::int)) Значения
 
 FROM (
 	SELECT Дата::date Дата
 	FROM generate_series(
 		(CURRENT_DATE + '30 day'::interval)::date,
-		(CURRENT_DATE - '70 day'::interval)::date,
+		(CURRENT_DATE - '69 day'::interval)::date,
 		'-1 day'::interval
 	) Дата
 ) ТекущаяДата
@@ -103,21 +97,18 @@ CREATE OR REPLACE VIEW nn.СтатистикаОбращенийТаблицей
 AS
 SELECT 
 	ТекущаяДата.Дата, 
-	json_object(
-		array_agg(ТипыИсследований.Аббр), 
-		array_agg(COALESCE (
-			СтатистикаОбращений3.Значение,
-			СтатистикаОбращений4.Значение,
-			СтатистикаОбращений12.Значение,
-			0
-		)::varchar)
-	) Значения
+	json_agg(json_build_object('Тип', row_to_json(ТипыИсследований), 'Значение', COALESCE (
+		СтатистикаОбращений3.Значение,
+		СтатистикаОбращений4.Значение,
+		СтатистикаОбращений12.Значение,
+		0
+	)::int)) Значения
 
 FROM (
 	SELECT Дата::date Дата
 	FROM generate_series(
 		((CURRENT_DATE + '30 day'::interval)::date - ((EXTRACT (DOW FROM (CURRENT_DATE + '30 day'::interval)::date) - 1)::varchar || ' day')::interval)::date, 
-		(CURRENT_DATE - '70 day'::interval)::date,
+		(CURRENT_DATE - '69 day'::interval)::date,
 		'-7 day'::interval
 	) Дата
 ) ТекущаяДата
@@ -187,15 +178,12 @@ SELECT *
 FROM (
 	SELECT 
 		ТекущаяДата.Дата, 
-		json_object(
-			array_agg(ТипыИсследований.Аббр), 
-			array_agg(COALESCE (
-				СтатистикаОбращений3.Значение,
-				СтатистикаОбращений4.Значение,
-				СтатистикаОбращений12.Значение,
-				0
-			)::varchar)
-		) Значения
+		array_agg(COALESCE (
+			СтатистикаОбращений3.Значение,
+			СтатистикаОбращений4.Значение,
+			СтатистикаОбращений12.Значение,
+			0
+		)::int) Значения
 
 	FROM (
 		SELECT Дата::date Дата
@@ -294,8 +282,8 @@ AS $$
 BEGIN
 	INSERT INTO nn.СтатистикаОбращений (Дата, КодТипа, КодТипаИсследования, Значение)
 	SELECT Дата, КодТипа, КодТипаИсследования, Значение
-	FROM jsonb_array_elements(_Данные) t (col),
-	     jsonb_to_record(t.col) x(Дата DATE, КодТипа INT, КодТипаИсследования INT, Значение INT)
+	FROM json_array_elements(_Данные) t (col),
+	     json_to_record(t.col) x(Дата DATE, КодТипа INT, КодТипаИсследования INT, Значение INT)
     ON CONFLICT (Дата, КодТипа, КодТипаИсследования) DO 
     UPDATE SET Значение = EXCLUDED.Значение;
 END

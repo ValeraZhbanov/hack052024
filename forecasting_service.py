@@ -75,7 +75,7 @@ class Model:
 
         rows = DbStore.execute_select_query_all("SELECT * FROM nn.СтатистикаОбращенийДляГенерации")
 
-        prep_rows = np.array(list(map(lambda row: list(row['Значения'].values()), rows)), dtype=np.float32)
+        prep_rows = np.array(list(map(lambda row: row['Значения'], rows)), dtype=np.float32)
 
         last_date = rows[-1]['Дата']
 

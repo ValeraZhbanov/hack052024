@@ -2,15 +2,131 @@
 CREATE TABLE hr.ГрафикиРаботы (
 	Код INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	Название VARCHAR(300),
-	ДнейЦИкла INT,
-	Активно boolean DEFAULT (true)
+    РабочихДней INT NOT NULL DEFAULT 0,
+    ВыходныхДней INT NOT NULL DEFAULT 0,
+    ДнейЦикла INT NOT NULL GENERATED ALWAYS AS (РабочихДней + ВыходныхДней) STORED,
+    ПоДнямНедели BOOLEAN DEFAULT (false),
 );
 
-INSERT INTO hr.ГрафикиРаботы (Название, ДнейЦИкла)
-VALUES 
-('Каждые 7 дней', 7),
-('Каждые 4 дня', 4),
-('Каждый день', 1),
+
+
+CREATE TABLE hr.ТипыРабочихСмен (
+	Код INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    ВремяНачала TIME NOT NULL,
+    Продолжительность TIME NOT NULL,
+    Перерыв TIME NOT NULL,
+
+    Ночная BOOLEAN DEFAULT (false),
+
+    CHECK ('00:00' < Продолжительность),
+    CHECK (Перерыв < Продолжительность)
+);
+
+INSERT INTO hr.ТипыРабочихСмен (ВремяНачала, Продолжительность, Перерыв, Ночная)
+VALUES
+('08:00'::time, '06:00'::time, '00:30'::time, false),
+('08:00'::time, '07:00'::time, '00:30'::time, false),
+('08:00'::time, '08:00'::time, '00:30'::time, false),
+('08:00'::time, '11:00'::time, '01:00'::time, false),
+('08:00'::time, '12:00'::time, '01:00'::time, false),
+
+('09:00'::time, '06:00'::time, '00:30'::time, false),
+('09:00'::time, '07:00'::time, '00:30'::time, false),
+('09:00'::time, '08:00'::time, '00:30'::time, false),
+('09:00'::time, '11:00'::time, '01:00'::time, false),
+('09:00'::time, '12:00'::time, '01:00'::time, false),
+
+('14:00'::time, '06:00'::time, '00:30'::time, false),
+('14:00'::time, '07:00'::time, '00:30'::time, false),
+('14:00'::time, '08:00'::time, '00:30'::time, false),
+('14:00'::time, '12:00'::time, '01:00'::time, false),
+
+('20:00'::time, '12:00'::time, '01:00'::time, true)
 
 
 
+CREATE TABLE hr.РабочиеСменыДокторов (
+
+	КодДоктора INT REFERENCES hr.Доктора (Код),
+
+	Дата DATE DEFAULT (CURRENT_DATE),
+
+	КодТипаРабочейСмены INT NOT NULL REFERENCES hr.ТипыРабочихСмен (Код),
+
+	PRIMARY KEY (КодДоктора, Дата),
+);
+
+
+CREATE VIEW hr.РабочиеСменыДокторовПодробно
+AS 
+SELECT
+    РабочиеСменыДокторов.*
+    row_to_json(ТипыРабочихСмен) ТипРабочейСмены
+FROM hr.РабочиеСменыДокторов
+INNER JOIN hr.ТипыРабочихСмен ON ТипыРабочихСмен.Код = РабочиеСменыДокторов.КодТипаРабочейСмены;
+
+
+CREATE OR REPLACE FUNCTION hr.ГрафикиРаботыВДатах (
+    _ДатаНачала DATE,
+    _ДатаОкончания DATE,
+    _КодГрафикаРаботы INT
+)
+RETURNS SETOF DATE 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT Период.Дата
+    FROM hr.ГрафикиРаботы 
+    CROSS JOIN (
+        SELECT ROW_NUMBER() OVER (ORDER BY Дата) - 1 Номер, Дата::date
+        FROM generate_series(_ДатаНачала, _ДатаОкончания, '1 day') Дата
+    ) Период
+    WHERE ГрафикиРаботы.Код = _КодГрафикаРаботы
+      AND ((ГрафикиРаботы.ПоДнямНедели AND EXTRACT (DOW FROM Период.Дата) BETWEEN 1 AND ГрафикиРаботы.РабочихДней)
+       OR (NOT ГрафикиРаботы.ПоДнямНедели AND Период.Номер % ГрафикиРаботы.ДнейЦикла BETWEEN 0 AND (ГрафикиРаботы.РабочихДней - 1)));
+END
+$$;
+
+
+CREATE OR REPLACE FUNCTION hr.РабочиеСменыСоздатьНаПромежуток (
+    _КодДоктора INT,
+
+    _ДатаНачала DATE,
+    _ДатаОкончания DATE,
+    _КодГрафикаРаботы INT,
+    _КодТипаРабочейСмены INT
+)
+RETURNS SETOF hr.РабочиеСменыДокторов
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE 
+    FROM hr.РабочиеСменыДокторов
+    WHERE КодДоктора = _КодДоктора
+      AND Дата BETWEEN _ДатаНачала AND _ДатаОкончания;
+
+    INSERT INTO hr.РабочиеСменыДокторов (КодДоктора, Дата, КодТипаРабочейСмены)
+    SELECT _КодДоктора, Дата, _КодТипаРабочейСмены
+    FROM hr.ГрафикиРаботыВДатах (_ДатаНачала, _ДатаОкончания, _КодГрафикаРаботы) Дата;
+
+    RETURN QUERY
+    SELECT *
+    FROM hr.РабочиеСменыДокторовПодробно
+    WHERE КодДоктора = _КодДоктора
+      AND Дата BETWEEN _ДатаНачала AND _ДатаОкончания;
+END
+$$;
+
+
+SELECT (
+    SELECT 1
+    FROM hr.РабочиеСменыСоздатьНаПромежуток (
+        Код, 
+        '20.04.2024'::date, '20.08.2024'::date, 
+        (random() * 3 + 1)::int, 
+        (random() * 14 + 1)::int
+    ) 
+    LIMIT 1
+)
+FROM hr.Доктора
