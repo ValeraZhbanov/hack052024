@@ -108,7 +108,7 @@ FROM (
 	SELECT Дата::date Дата
 	FROM generate_series(
 		((CURRENT_DATE + '30 day'::interval)::date - ((EXTRACT (DOW FROM (CURRENT_DATE + '30 day'::interval)::date) - 1)::varchar || ' day')::interval)::date, 
-		(CURRENT_DATE - '69 day'::interval)::date,
+		(CURRENT_DATE - '120 day'::interval)::date,
 		'-7 day'::interval
 	) Дата
 ) ТекущаяДата
@@ -165,7 +165,7 @@ LEFT JOIN nn.СтатистикаОбращений СтатистикаОбра
 												     AND СтатистикаОбращений4.КодТипа = 4
 												     AND СтатистикаОбращений4.КодТипаИсследования = ТипыИсследований.Код
 GROUP BY ТекущаяДата.Дата
-ORDER BY ТекущаяДата.Дата DESC;
+ORDER BY ТекущаяДата.Дата;
 
 
 

@@ -188,7 +188,7 @@ SELECT
 FROM hr.Доктора
 
 LEFT JOIN (
-    SELECT КодДоктора, json_agg(json_build_object('Основная', Основная, 'Модальность', row_to_json(Модальности))) Модальности
+    SELECT КодДоктора, json_agg(json_build_object('Основная', Основная, 'Модальность', row_to_json(Модальности)) ORDER BY Основная DESC) Модальности
     FROM hr.МодальностиДокторов
     INNER JOIN med.Модальности ON Модальности.Код = МодальностиДокторов.КодМодальности
 	WHERE МодальностиДокторов.Активно

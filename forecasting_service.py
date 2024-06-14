@@ -105,8 +105,6 @@ class Model:
 
 
     def fit(self):
-
-
         return
 
 
@@ -118,8 +116,7 @@ def predict():
 
 
 def fit():
-    
-
+    Model().fit()
     return
 
 
