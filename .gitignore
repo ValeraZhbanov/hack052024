@@ -1,3 +1,4 @@
 # AI
-/AI_data/*
+/AI_data/*.h5
+/AI_data/*.gz
 
