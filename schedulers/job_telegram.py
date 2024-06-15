@@ -1,43 +1,19 @@
 # -*- coding: cp1251 -*-
 
-import flask
-import flask_apscheduler
 
 import os
 import json
 import requests
-import asyncio
-
-import smtplib
-
 
 import config
 
 from dbstore import DbStore
 
 
-scheduler = flask_apscheduler.APScheduler()
 bot_token = config.telegram['token']
 
 
-def send_mail():
-    events = DbStore.execute_select_query_all("""
-        SELECT Код, КодПользователя, Текст, Ссылка, Почта
-        FROM event.ОчередьОтправки
-        WHERE УведомлятьЧерезПочту
-          AND Почта IS NOT NULL
-          AND ЧислоПопытокПочты < 3
-          AND NOT ОтправленноНаПочту
-          AND CURRENT_TIMESTAMP + '-01:00'::interval < ДатаСоздания
-        LIMIT 30;
-    """)
-
-
-    # SMTP server...
-
-    pass
-
-def send_telegram():
+def processing():
     events = DbStore.execute_select_query_all("""
         SELECT Код, КодПользователя, Текст, Ссылка, Телеграм
         FROM event.ОчередьОтправки
@@ -86,6 +62,3 @@ def send_telegram():
         DbStore.execute_proc('event.ФиксироватьОтправку', [event['Код'], event['КодПользователя'], 2, sended])
 
 
-scheduler.add_job(id='Уведомление почты', func=send_mail, trigger="interval", seconds=10, max_instances=1)
-scheduler.add_job(id='Уведомление телеграм', func=send_telegram, trigger="interval", seconds=10, max_instances=1)
-scheduler.start()

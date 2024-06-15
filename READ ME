@@ -8,7 +8,8 @@
 # Обучение модели
 https://colab.research.google.com/drive/1xZ_M_jvJA8-hcNmIrwqImAQMyzC1WK0v#scrollTo=PWzy2XcM1TgC
 
-
+# Алгоритм
+https://colab.research.google.com/drive/1NiT5vdwe2ZIyyQoXJ0ilZUFipKu51Qiu#scrollTo=QHkz6p15GLXw&uniqifier=2
 
 Зависимости и версии
 Python 3.11
@@ -31,7 +32,6 @@ pip install --upgrade tensorflow
 pip install keras
 
 pip install secure-smtplib
-pip install python-telegram-bot
 
 
 

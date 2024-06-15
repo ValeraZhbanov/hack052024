@@ -23,18 +23,20 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="config.py" />
-    <Compile Include="schedule.py" />
+    <Compile Include="schedulers\job_telegram.py" />
+    <Compile Include="schedulers\job_generatesch.py" />
+    <Compile Include="schedulers\job_mail.py" />
     <Compile Include="forecasting_service.py" />
     <Compile Include="server.py" />
     <Compile Include="dbstore.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="data\" />
+    <Folder Include="schedulers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="data\Параметры.sql" />
     <Content Include="data\Уведомления.sql" />
-    <Content Include="data\test.sql" />
     <Content Include="data\Исследования.sql" />
     <Content Include="data\ГрафикиРаботы.sql" />
     <Content Include="data\Доктора_.sql" />

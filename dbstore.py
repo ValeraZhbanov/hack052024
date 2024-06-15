@@ -5,9 +5,12 @@ import psycopg2.extras
 
 import config
 
+
+
 class DbStore:
     def connect():
         return psycopg2.connect(**config.doc_schedule)
+
 
     def execute_select_query_one(query, params=None):
         with DbStore.connect() as conn, conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
@@ -26,7 +29,7 @@ class DbStore:
                 batch =  cursor.fetchmany(batchsize)
                 if len(batch) == 0: break
                 yield batch
-    
+
     def execute_update_query(query, params):
         with DbStore.connect() as conn, conn.cursor() as cursor:
             cursor.execute(query, params)
@@ -43,9 +46,8 @@ class DbStore:
             conn.commit()
             return new_id
 
-    def execute_proc(func_name, params):
+    def execute_proc(func_name, params=None):
         with DbStore.connect() as conn, conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cursor:
             cursor.callproc(func_name, params)
             conn.commit()
             return cursor.fetchall()
-

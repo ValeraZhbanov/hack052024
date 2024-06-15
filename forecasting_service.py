@@ -122,6 +122,7 @@ def fit():
 
 if __name__ == '__main__':
 
+    scheduler.init_app(app)
 
     scheduler.add_job(id='Прогнозирование', func=predict, trigger="cron", hour=3, minute=0)
     scheduler.add_job(id='Обучение', func=fit, trigger="cron", day_of_week='6', hour=3, minute=0)
