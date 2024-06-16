@@ -43,7 +43,7 @@ def processing():
         }
 
         if webAppUrl is not None:
-            data['reply_markup']={"inline_keyboard":[[{'text':'Перейти на сайт', 'web_app':{'url':webAppUrl}}]],"one_time_keyboard":True}
+            data['reply_markup']=json.dumps({"inline_keyboard":[[{'text':'Перейти на сайт', 'web_app':{'url': webAppUrl}}]]})
 
         url ="https://api.telegram.org/bot" + bot_token + "/sendMessage"
 

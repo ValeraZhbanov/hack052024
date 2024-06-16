@@ -662,8 +662,7 @@ FROM (
 		json_agg(json_build_object(
 			'Модальность', row_to_json(Модальности),
 			'КоличествоИсследованийПрогнозируемое', COALESCE(СтатистикаОбращенийМодальностей.Количество, 0),
-			'МаксКолИсследованийЗаСмену', МодальностиМинМакс.МаксКолИсследованийЗаСмену,
-			'КоличествоДокторвДляЗакрытия', COALESCE(СтатистикаОбращенийМодальностей.Количество, 0) / ((МодальностиМинМакс.МаксКолИсследованийЗаСмену / 8) * (SELECT EXTRACT (EPOCH FROM Значение::varchar::interval) / 60 / 60 начение FROM stg.Параметры WHERE Ключ = 'ConditionallyMandatoryDistributionFor1RatePerWeek'))
+			'КоличествоДокторвДляЗакрытия', (COALESCE(СтатистикаОбращенийМодальностей.Количество, 0) / ((МодальностиМинМакс.МаксКолИсследованийЗаСмену / 8) * (SELECT EXTRACT (EPOCH FROM Значение::varchar::interval) / 60 / 60 начение FROM stg.Параметры WHERE Ключ = 'ConditionallyMandatoryDistributionFor1RatePerWeek')))::int
 		) ORDER BY Модальности.Код) Модальности
 
 	FROM sch.ПроектыРасписания
