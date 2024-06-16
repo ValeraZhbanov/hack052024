@@ -30,18 +30,20 @@ CREATE TABLE hr.НормыДокторов (
 CREATE OR REPLACE VIEW hr.НормыДокторовПодробно 
 AS
 SELECT 
+    Доктора.Код КодДоктора,
     row_to_json(Доктора) Доктор, 
-    COALESCE (НормаЧасов, Параметры.Значение::varchar::interval) НормаЧасов,
+    COALESCE (НормаЧасов, NumberOfWorkingHoursPerMonth.Значение::varchar::interval * Доктора.Ставка) НормаЧасов,
     МинКолИсследований,
     МаксКолИсследований
 FROM hr.Доктора
 LEFT JOIN hr.НормыДокторов ON НормыДокторов.КодДоктора = Доктора.Код,
-(SELECT * FROM stg.Параметры WHERE Ключ = 'NumberOfWorkingHoursPerMonth') Параметры
+(SELECT * FROM stg.Параметры WHERE Ключ = 'NumberOfWorkingHoursPerMonth') NumberOfWorkingHoursPerMonth
 
 
 
-
-
+--
+-- Создание или редактирование доктора
+--
 CREATE OR REPLACE FUNCTION hr.ДоктораSet (
 	_Код INT,
 	_ФИО VARCHAR(300),
@@ -93,10 +95,6 @@ END
 $$;
 
 
-
-
-
-
 CREATE TABLE hr.ТипыОтпусков (
 	Код INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	Название VARCHAR(300)
@@ -129,6 +127,10 @@ SELECT
 FROM hr.ОтпускаДокторов 
 INNER JOIN hr.ТипыОтпусков ON ТипыОтпусков.Код = ОтпускаДокторов.КодТипаОтпуска;
 
+
+--
+-- Скрипт для заполнения списка докторов
+--
 INSERT INTO hr.ОтпускаДокторов (КодДоктора, ДатаНачала, ДатаОкончания, КодТипаОтпуска)
 SELECT Код, ДатаНачала, ДатаНачала + Длит, КодТипа
 FROM (
@@ -147,7 +149,9 @@ WHERE NOT EXISTS (
 )
 
 
-
+--
+-- Создает или изменяет отпуск
+--
 CREATE OR REPLACE FUNCTION hr.ОтпускаSet (
     _Код INT,
 	_КодДоктора INT,

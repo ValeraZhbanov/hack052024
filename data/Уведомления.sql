@@ -25,7 +25,9 @@ CREATE TABLE event.ЖурналОтправки (
 );
 
 
-
+--
+-- Для цикла отправки уведомления
+--
 CREATE VIEW event.ОчередьОтправки
 AS
 SELECT
@@ -56,7 +58,9 @@ ORDER BY Уведомления.ДатаСоздания;
   
 
 
-
+--
+-- Создает новое уведомление с текстом, ссылкой веб сайта и списком получателей
+--
 CREATE OR REPLACE FUNCTION event.СоздатьУведомление (_Текст VARCHAR, _Ссылка VARCHAR, _Получатели INT[])
 RETURNS void
 LANGUAGE plpgsql
@@ -74,7 +78,9 @@ END
 $$;
 
 
-
+--
+-- Для цикла отправки уведомлений, чтобы зафиксировать попытку отправки.
+--
 CREATE OR REPLACE FUNCTION event.ФиксироватьОтправку(_КодУведомления INT, _КодПользователя INT, _КодТипаОтправки INT, _Отправленно BOOLEAN)
 RETURNS void
 LANGUAGE plpgsql
