@@ -15,7 +15,7 @@ CREATE TABLE nn.СтатистикаОбращений (
 
 	PRIMARY KEY (Дата, КодТипа, КодТипаИсследования),
 
-	CHECK (КодТипа IN (3, 4) AND EXTRACT (DOW FROM Дата) = 1)
+	CHECK (КодТипа IN (3, 4) AND EXTRACT (DOW FROM Дата) = 1 OR КодТипа NOT IN (3, 4))
 );
 
 

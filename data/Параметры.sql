@@ -6,10 +6,10 @@ CREATE TABLE stg.ГруппыПараметров (
 	Название VARCHAR(300) NOT NULL UNIQUE,
 );
 
-INSERT INTO stg.Параметры (Название)
+INSERT INTO stg.ГруппыПараметров (Название)
 VALUES 
-('Кадровая структура'),
-('Модуль расписания')
+('Плановое уведомление медработников о необходимости заполнения желаемого графика работы'),
+('Плановое уведомление руководителя референс-центра о необходимости формирования расписания"')
 
 
 
@@ -23,14 +23,11 @@ CREATE TABLE stg.Параметры (
 
 INSERT INTO stg.Параметры (Ключ, КодГруппы, Название, Значение)
 VALUES 
-('MinimumRestTimePerWeek', 1, 'Минимальное время отдыха в неделю', to_json('48:00'::interval)),
-('TheRateOfHoursFor1Bet', 1, 'Норма часов на 1 ставку', to_json('8:00'::interval)),
-('TheNumberOfShiftsInTheCurrentMonth', 2, 'Число смен в текущем месяце', to_json(21)),
-('NumberOfWorkingHoursPerMonth', 2, 'Число рабочих часов в месяце', to_json('168:00'::interval)),
-('NumberOfWorkingHoursPerMonth', 2, 'Число рабочих часов в месяце', to_json('168:00'::interval)),
-('ConditionallyMandatoryDistributionFor1RatePerWeek', 2, 'Условно-обязательно распределение на 1 ставку в неделю', to_json('32:00'::interval)),
-('TheMaximumErrorOfTheClockIs1RatePerWeek', 2, 'Максимальная погрешность часов на 1 ставку в неделю', to_json('19:00'::interval)),
-('MaximumNumberOfDoctorsPerShift', 2, 'Максимальное число врачей в смену', to_json(260))
+('eventHrDay', 5, 'День месяца уведомления', to_json(20)),
+('eventHrText', 5, 'Текст уведомления уведомления', to_json('Уважаемый медработник, сообщаем вам что подошло время заполнения желаемого графика работы')),
+
+('eventSchDay', 6, 'День месяца уведомления', to_json(25)),
+('eventSchText', 6, 'День месяца уведомления', to_json('Уважаемый руководитель референс-центра, напоминаем вам о необходимости формирования расписания на следующий месяц'))
 ON CONFLICT (Ключ) DO NOTHING;
 
 

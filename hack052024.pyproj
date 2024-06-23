@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="config.py" />
+    <Compile Include="schedulers\job_event.py" />
     <Compile Include="schedulers\job_telegram.py" />
     <Compile Include="schedulers\job_generatesch.py" />
     <Compile Include="schedulers\job_mail.py" />

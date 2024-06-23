@@ -3,6 +3,7 @@
 import waitress
 import flask
 import flask_apscheduler
+import requests
 
 import io
 import datetime
@@ -14,6 +15,7 @@ import config
 from schedulers import job_mail
 from schedulers import job_telegram
 from schedulers import job_generatesch
+from schedulers import job_event
 
 from dbstore import DbStore
 
@@ -67,7 +69,7 @@ def get_report():
     for it in range(ЗаписиРасписания.shape[0]):
         days = max(days, len(ЗаписиРасписания['СменыНаМесяц'][0]))
 
-    days1 = int(np.floor(31 / 2))
+    days1 = int(np.floor(days / 2))
     days2 = int(days - days1)
 
     cols=['Фамилия, Имя, Отчество', 'Модальность', 'Дополнительные модальности', 'Ставка', 'Таб.№', 
@@ -145,6 +147,9 @@ if __name__ == '__main__':
     scheduler.add_job(id='Уведомление телеграм', func=job_telegram.processing, trigger="interval", seconds=10, max_instances=1)
 
     scheduler.add_job(id='Генерация расписания', func=job_generatesch.processing, trigger="interval", seconds=1, max_instances=32)
+
+    scheduler.add_job(id='Плановое уведомление медработников', func=job_event.EventHrText.processing, trigger="cron", day=job_event.EventHrText.day, max_instances=1)
+    scheduler.add_job(id='Плановое уведомление руководителя', func=job_event.EventSchText.processing, trigger="cron", day=job_event.EventSchText.day, max_instances=1)
 
 
     scheduler.start()

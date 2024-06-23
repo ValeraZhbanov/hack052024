@@ -9,14 +9,14 @@ doc_schedule = {
 }
 
 forecasting_service = {
-    'host': "127.0.0.1",
+    'host': "0.0.0.0",
     'port': 5024, 
     'url_scheme': 'http',
     'threads': 4,
 }
 
 server = {
-    'host': "127.0.0.1",
+    'host': "0.0.0.0",
     'port': 50032, 
     'url_scheme': 'http',
     'threads': 32,
@@ -26,3 +26,5 @@ telegram = {
     'token': "7301130137:AAHvW4jglMkMMNGLO7jPPpvPSajuGScn25w"
 }
     
+
+
